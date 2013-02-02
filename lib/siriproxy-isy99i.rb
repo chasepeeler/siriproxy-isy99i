@@ -1,180 +1,101 @@
-require 'uri'
-require 'cora'
 require 'httparty'
-require 'rubygems'
-require 'devices'
 require 'siri_objects'
+require 'isyconfig'
 
 class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
   attr_accessor :isyip
   attr_accessor :isyid
   attr_accessor :isypw
   attr_accessor :elkcode
-  attr_accessor :camip
+  attr_accessor :camurls
   attr_accessor :camid
   attr_accessor :campw
   attr_accessor :webip
   
-  def initialize(config)  
-    self.isyip = config["isyip"]
-    self.isyid = config["isyid"]
-    self.isypw = config["isypw"]
-    self.elkcode = config["elkcode"]
-    self.camip = config["camip"]
-    self.camid = config["camid"]
-    self.campw = config["campw"]
-    self.webip = config["webip"]
-    @isyauth = {:username => "#{self.isyid}", :password => "#{self.isypw}"}
-    @camauth = {:username => "#{self.camid}", :password => "#{self.campw}"}
-
-end
+  def initialize(config = {})  
+	configIsy(config)
+  end
 
   class Rest
     include HTTParty
     format :xml
   end
 
-listen_for(/arm away/i) {arm_away}
-
-listen_for(/arm stay/i) {arm_stay}
-
-listen_for(/disarm alarm/i) {disarm_alarm}
-
-listen_for(/open garage/i) {open_garage}
-
-listen_for(/close garage/i) {close_garage}
-
-listen_for(/ring doorbell/i) {ring_doorbell}
-
-  listen_for (/turn on (.*)/i) do |device|
-    deviceName = URI.unescape(device.strip)
-    deviceAddress = deviceCrossReference(deviceName)
-    puts "deviceName = #{deviceName}"
-    puts "deviceAddress = #{deviceAddress}"
-    if deviceAddress != 0
-	say "OK. I am turning on #{deviceName} now."
-	Rest.get("#{self.isyip}/rest/nodes/#{deviceAddress}/cmd/DON", :basic_auth => @isyauth)
-    else say "I'm sorry, but I am not programmed to control #{deviceName}."
-    end
-    request_completed
+  listen_for (/turn (on|off) (.*)/i) do |command, name|
+	command_turn(command, name)
+	request_completed
+  end
+  
+  listen_for (/ring doorbell/i) do
+	command_turn("on", "doorbell")
+	request_completed
+	sleep(2)
+	command_turn("off", "doorbell")
+  end
+  
+  listen_for (/alarm (disarm|stay|away)/i) do |command|
+	command_alarm command
+	request_completed
   end
 
-  listen_for (/turn off (.*)/i) do |device|
-    deviceName = URI.unescape(device.strip)
-    deviceAddress = deviceCrossReference(deviceName)
-    puts "deviceName = #{deviceName}"
-    puts "deviceAddress = #{deviceAddress}"
-    if deviceAddress != 0
-	say "OK. I am turning off #{deviceName} now."
-	Rest.get("#{self.isyip}/rest/nodes/#{deviceAddress}/cmd/DOF", :basic_auth => @isyauth)
-    else say "I'm sorry, but I am not programmed to control #{deviceName}."
-    end
-    request_completed
+  listen_for (/(open|close) garage/i) do |command|
+	Rest.get(@isyIp + @nodeId["garage"] + @nodeCmd["on"], @isyAuth)
+	command_garage command
+	request_completed
+	Rest.get(@isyIp + @nodeId["garage"] + @nodeCmd["off"], @isyAuth)
   end
 
-  def arm_away
-    say "OK. I am arming your security system to away mode."
-    Rest.get("#{self.isyip}/rest/elk/area/1/cmd/arm?armType=1&code=#{self.elkcode}", :basic_auth => @isyauth)
-	object = SiriAddViews.new
-	object.make_root(last_ref_id)
-	answer = SiriAnswer.new("Arming Station", [SiriAnswerLine.new('logo',"#{self.webip}/elk-kp2-away.png")])
-	object.views << SiriAnswerSnippet.new([answer])
-	send_object object
-    request_completed 
-  end
-
-  def arm_stay
-    say "OK. I am armimg your security system to stay mode."
-    Rest.get("#{self.isyip}/rest/elk/area/1/cmd/arm?armType=2&code=#{self.elkcode}", :basic_auth => @isyauth)
-	object = SiriAddViews.new
-	object.make_root(last_ref_id)
-	answer = SiriAnswer.new("Arming Station", [SiriAnswerLine.new('logo',"#{self.webip}/elk-kp2-stay.png")])
-	object.views << SiriAnswerSnippet.new([answer])
-	send_object object
-    request_completed 
-  end
-
-  def disarm_alarm
-    say "OK. I am disarming your security system."
-    Rest.get("#{self.isyip}/rest/elk/area/1/cmd/disarm?code=#{self.elkcode}", :basic_auth => @isyauth)
-	object = SiriAddViews.new
-	object.make_root(last_ref_id)
-	answer = SiriAnswer.new("Arming Station", [SiriAnswerLine.new('logo',"#{self.webip}/elk-kp2-disarmed.png")])
-	object.views << SiriAnswerSnippet.new([answer])
-	send_object object
-    request_completed 
-  end
-
-  def open_garage
-	# turn on garage scene to see the door
-	Rest.get("#{self.isyip}/rest/nodes/27356/cmd/DON", :basic_auth => @isyauth)
-	# push garage camera image to phone	
-	object = SiriAddViews.new
-	object.make_root(last_ref_id)
-	answer = SiriAnswer.new("Garage Camera", [SiriAnswerLine.new('logo',"#{self.camip}/cgi/jpg/image.cgi")])
-	object.views << SiriAnswerSnippet.new([answer])
-	send_object object
-	# check status of garage door
-	check_status = Rest.get("#{self.isyip}/rest/elk/zone/14/query/voltage", :basic_auth => @isyauth).inspect
-    	status = check_status.gsub(/^.*val\D+/, "")
-   	status = status.gsub(/\D+\D+.*$/, "")
-    	status_zone = status.to_f / 10
-	# garage door is open
-	if status_zone > 7.0
-		say "Your garage door is already open, Cabrone."  
+  def command_turn(command, name)
+	nodeid = @nodeId[name.downcase.strip]
+	unless nodeid.nil?
+		say "OK. I am turning #{command.downcase.strip} #{name.downcase.strip} now."
+		Rest.get(@isyIp + nodeid + @nodeCmd[command.downcase.strip], @isyAuth) 
 	else
-		# open garage door
-		say "OK. I am opening your garage door."
-		Rest.get("#{self.isyip}/rest/elk/output/3/cmd/on?offTimerSeconds=2", :basic_auth => @isyauth)
+		say "I'm sorry, but I am not programmed to control #{name.downcase.strip}."
 	end
-	# turn off garage scene	
-	Rest.get("#{self.isyip}/rest/nodes/27356/cmd/DOF", :basic_auth => @isyauth)
-    request_completed
+  end	
+		
+  def command_alarm(command)
+	alarmcmd = @alarmCmd[command.downcase.strip]
+	say "OK. I am changing alarm state to #{command}."
+	Rest.get(@isyIp + @areaCmd["first floor"] + alarmcmd + @elkCode, @isyAuth)
+	push_image("Arming Station", @webIp + "/#{command.downcase.strip}.png")
   end
-
-  def close_garage
-	# turn on garage scene to see the door
-	Rest.get("#{self.isyip}/rest/nodes/27356/cmd/DON", :basic_auth => @isyauth)
-	# push garage camera image to phone	
-	object = SiriAddViews.new
-	object.make_root(last_ref_id)
-	answer = SiriAnswer.new("Garage Camera", [SiriAnswerLine.new('logo',"#{self.camip}/cgi/jpg/image.cgi")])
-	object.views << SiriAnswerSnippet.new([answer])
-	send_object object
-	# check status of garage door
-	check_status = Rest.get("#{self.isyip}/rest/elk/zone/14/query/voltage", :basic_auth => @isyauth).inspect
-    	status = check_status.gsub(/^.*val\D+/, "")
-   	status = status.gsub(/\D+\D+.*$/, "")
-    	status_zone = status.to_f / 10
-	# garage door is closed
-	if status_zone < 7.0
-		say "Your garage door is already closed, Cabrone."  
-	else
-		# ask if garage door is clear and take action	
+  
+  def command_garage(command)
+	push_image("Garage Camera", @camUrl["garage"])
+	voltage = status_zone("garage door")
+	if (voltage < 7.0 && command.downcase.strip == "open")
+		say "OK. I am opening your garage door."
+		Rest.get(@isyIp + @outputCmd["garage door"], @isyAuth)
+	elsif (voltage > 7.0 && command.downcase.strip == "close")
 		response = ask "I would not want to cause injury or damage. Is the garage door clear?"
 		if (response =~ /yes|yep|yeah|ok/i)
-    			say "Thank you. I am closing your garage door."
-    			Rest.get("#{self.isyip}/rest/elk/output/3/cmd/on?offTimerSeconds=2", :basic_auth => @isyauth)
+			say "Thank you. I am closing your garage door."
+			Rest.get(@isyIp + @outputCmd["garage door"], @isyAuth)
 		else
 			say "OK. I will not close your garage door."
 		end
-	end
-	# turn off garage scene
-	Rest.get("#{self.isyip}/rest/nodes/27356/cmd/DOF", :basic_auth => @isyauth)
-    request_completed 
+	else
+		say "Your garage door is already #{command.downcase.strip}, Cabrone."
+  	end
   end
-
-  def ring_doorbell
-    say "It seems rather pointless, but OK I am ringing your doorbell."
-    Rest.get("#{self.isyip}/rest/nodes/1C%207%2049%202/cmd/DON", :basic_auth => @isyauth)
-    	sleep(2) 
-    Rest.get("#{self.isyip}/rest/nodes/1C%207%2049%202/cmd/DOF", :basic_auth => @isyauth)
+  
+  def push_image(title, image)
 	object = SiriAddViews.new
 	object.make_root(last_ref_id)
-	answer = SiriAnswer.new("Doorbell", [SiriAnswerLine.new('logo',"#{self.webip}/doorbell.jpg")])
+	answer = SiriAnswer.new(title, [SiriAnswerLine.new('logo', image)])
 	object.views << SiriAnswerSnippet.new([answer])
 	send_object object
-    request_completed 
+  end		
+
+  def status_zone(zone)
+  	get_status = Rest.get(@isyIp + @zoneSt[zone], @isyAuth).inspect
+  	status = get_status.gsub(/^.*val\D+/, "")
+   	status = status.gsub(/\D+\D+.*$/, "")
+	voltage = status.to_f / 10
+	return voltage
   end
+  			
   
 end

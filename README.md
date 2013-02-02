@@ -45,7 +45,7 @@ and rename it siriproxy-isy99i or create a symbolic link. You will need to go to
 11. Open a terminal and navigate to ~/SiriProxy
 12. Type `siriproxy bundle` <enter>
 13. Type `bundle install` <enter>
-14. Type `rvmsudo siriproxy server` <enter> followed by your password.
+14. Type `siriproxy server` <enter> followed by your password.
 15. SiriProxy with ISY99i control is now ready for use.
 
 **NOTE: If/when you make changes to either devices.rb or siriproxy-isy99i.rb, you must copy it to the other plugin directory.  Remember, you put a copy in** `~/.rvm/gems/ruby-1.9.3-p###@SiriProxy/gems/siriproxy-0.3.#/plugins` **AND** `~/SiriProxy/plugins`**.  They both have to match!  Then follow steps 11 - 15 of the installation procedure to load up your changes and start the server again.**
@@ -53,16 +53,16 @@ and rename it siriproxy-isy99i or create a symbolic link. You will need to go to
 Usage
 -----
 
-**Turn on, turn off (device name)**
+**Turn on|off (name)**
 
 - Will turn on or off the device. 
 
-**Arm away, arm stay, disarm alarm**
+**Alarm disarm|away|stay**
 
-- Siri will change the alarm to the state requested and pushes a custom image to Siri.  Currently it does not confirm the state change, but I have not had any reliability problems.
-- Note: Siri has a lot of trouble with “S” sounds at the beginning and end of words, so you may have to alter your speech slightly to get Siri to recognize “arm stay” or you can change the syntax to look for a different pattern.  
+- Siri will change the alarm to the state requested and pushes a custom image to Siri.  
+- Note: Siri has a lot of trouble with “S” sounds at the beginning and end of words, so you may have to alter your speech slightly.
 
-**Open garage, close garage**
+**Open|close garage**
 
 - Siri will push an image from your IP camera and check the status of the door.  If the door is already in the requested position, it will let you know.  
 - If the garage door is closed it will open without any need for confirmation.
@@ -74,10 +74,8 @@ To Do List
 
 Let me know if you want to collaborate.  
 
-- Update to pass in entire camera URL.  
-- Add authenticated IP camera access. May have to write image to server, then provide Siri a URL to the image.
 - Add ability to launch a live IP camera feed or at least provide a button to do so.
-- Perhaps develop code for self awareness of devices/addresses.
+- Make plugin self aware of your configuration using the REST interface.
 
 Licensing
 ---------

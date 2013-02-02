@@ -10,7 +10,7 @@
       isyid: 'username'
       isypw: 'password'
       elkcode: 'code'
-      camip: 'http://192.168.69.81' #IP address of your IP camera (if you have one)
+      camurls:	{ 'garage': 'http://192.168.69.81/cgi/jpg/image.cgi' } #URLs of IP camera image.    
       camid: 'username'
       campw: 'password'
       webip: 'http://192.168.69.95' #IP address of your web server (hosting custom pictures)
