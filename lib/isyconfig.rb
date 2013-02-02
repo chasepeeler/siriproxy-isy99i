@@ -2,6 +2,7 @@ def configIsy(config)
 
 # Node IDs
 # Note: Must all be lower case. Use multiple entries for variability in Siri response.
+# Note: Eliminate leading zeros in device address.  
 @nodeId = Hash.new
 @nodeId["all lights"] 		= "/rest/nodes/8730"
 @nodeId["attic"] 			= "/rest/nodes/18595"
@@ -31,6 +32,18 @@ def configIsy(config)
 @nodeCmd = Hash.new
 @nodeCmd["on"] 	= "/cmd/DON"
 @nodeCmd["off"] = "/cmd/DOF"
+
+# ISY inputs
+# Note: Must all be lower case. Use multiple entries for variability in Siri response.
+# Note: Eliminate leading zeros in device address.  
+# Note: Battery operated devices do not continuously report status, thus will be blank until first change after an ISY reboot or power cycle.
+@inputSt = Hash.new
+@inputSt["attic moisture"] 		= "/rest/status/11%2073%2097%201"
+@inputSt["deck box motion"] 	= "/rest/status/11%20A4%207A%201"
+@inputSt["deck box open"] 		= "/rest/status/14%2048%20F9%201"
+@inputSt["doorbell"] 			= "/rest/status/1C%207%2049%201" 
+@inputSt["porch motion"] 		= "/rest/status/1C%205%20FF%201" 
+@inputSt["stairwell motion"] 	= "/rest/status/14%207E%2049%201"
 
 # Future use
 @programId = Hash.new

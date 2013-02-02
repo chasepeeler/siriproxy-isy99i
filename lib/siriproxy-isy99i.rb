@@ -40,6 +40,11 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
 	request_completed
   end
   
+  listen_for (/status (.*)/i) do |input|
+  	command_status input.downcase.strip
+	request_completed
+  end
+  	  
   listen_for (/alarm (disarm|stay|away)/i) do |command|
 	command_alarm command.downcase.strip
 	request_completed
@@ -60,6 +65,17 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
 	end
   end	
 		
+  def command_status(input)
+  	inputst = @inputSt[input]
+  	unless inputst.nil?
+  		status = status_input(inputst)
+  		say "#{input} is #{status}" 
+  	else
+  		say "I'm sorry, but I am not programmed to check #{input} status." 
+  	end
+  end	
+
+
   def command_alarm(command)
 	alarmcmd = @alarmCmd[command]
 	say "OK. I am changing alarm state to #{command}."
@@ -70,11 +86,11 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
   def command_garage(command)
 	Rest.get(@isyIp + @nodeId["garage"] + @nodeCmd["on"], @isyAuth)
 	push_image("Garage Camera", @camUrl["garage"])
-	voltage = status_zone("garage door")
-	if (voltage < 7.0 && command == "open")
+	status = status_zone("garage door")
+	if (status == "closed" && command == "open")
 		say "OK. I am opening your garage door."
 		Rest.get(@isyIp + @outputCmd["garage door"], @isyAuth)
-	elsif (voltage > 7.0 && command == "close")
+	elsif (status == "open" && command == "close")
 		response = ask "I would not want to cause injury or damage. Is the garage door clear?"
 		if (response =~ /yes|yep|yeah|ok/i)
 			say "Thank you. I am closing your garage door."
@@ -83,11 +99,19 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
 			say "OK. I will not close your garage door."
 		end
 	else
-		say "Your garage door is already #{command}, Cabrone."
+		say "Your garage door is already #{status}, Cabrone."
   	end
 	Rest.get(@isyIp + @nodeId["garage"] + @nodeCmd["off"], @isyAuth)
   end
   
+  def status_input(input)
+  	# Battery operated devices do not continuously reports status, thus will be blank until first change after an ISY reboot or power cycle.
+  	resp = Rest.get(@isyIp + input, @isyAuth).inspect
+    resp = resp.gsub(/^.*tted"=>"/, "")
+    status = resp.gsub(/", "uom.*$/, "")
+	return status.downcase.strip
+  end
+  			
   def push_image(title, image)
 	object = SiriAddViews.new
 	object.make_root(last_ref_id)
@@ -97,12 +121,17 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
   end		
 
   def status_zone(zone)
-  	get_status = Rest.get(@isyIp + @zoneSt[zone], @isyAuth).inspect
-  	status = get_status.gsub(/^.*val\D+/, "")
-   	status = status.gsub(/\D+\D+.*$/, "")
-	voltage = status.to_f / 10
-	return voltage
+  	resp = Rest.get(@isyIp + @zoneSt[zone], @isyAuth).inspect
+  	resp = resp.gsub(/^.*val\D+/, "")
+   	resp = resp.gsub(/\D+\D+.*$/, "")
+	voltage = resp.to_f / 10
+	if (voltage > 10) 
+		status = "open"
+	else
+		status = "closed"	
+	end
+	return status.downcase.strip
   end
-  			
+
   
 end
