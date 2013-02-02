@@ -22,53 +22,50 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
   end
 
   listen_for (/turn (on|off) (.*)/i) do |command, name|
-	command_turn(command, name)
+	command_turn(command.downcase.strip, name.downcase.strip)
 	request_completed
   end
   
   listen_for (/ring doorbell/i) do
 	command_turn("on", "doorbell")
 	request_completed
-	sleep(2)
-	command_turn("off", "doorbell")
   end
   
   listen_for (/alarm (disarm|stay|away)/i) do |command|
-	command_alarm command
+	command_alarm command.downcase.strip
 	request_completed
   end
 
   listen_for (/(open|close) garage/i) do |command|
-	Rest.get(@isyIp + @nodeId["garage"] + @nodeCmd["on"], @isyAuth)
-	command_garage command
+	command_garage command.downcase.strip
 	request_completed
-	Rest.get(@isyIp + @nodeId["garage"] + @nodeCmd["off"], @isyAuth)
   end
 
   def command_turn(command, name)
-	nodeid = @nodeId[name.downcase.strip]
+	nodeid = @nodeId[name]
 	unless nodeid.nil?
-		say "OK. I am turning #{command.downcase.strip} #{name.downcase.strip} now."
-		Rest.get(@isyIp + nodeid + @nodeCmd[command.downcase.strip], @isyAuth) 
+		say "OK. I am turning #{command} #{name} now."
+		Rest.get(@isyIp + nodeid + @nodeCmd[command], @isyAuth) 
 	else
-		say "I'm sorry, but I am not programmed to control #{name.downcase.strip}."
+		say "I'm sorry, but I am not programmed to control #{name}."
 	end
   end	
 		
   def command_alarm(command)
-	alarmcmd = @alarmCmd[command.downcase.strip]
-	say "OK. I am changing alarm state to #{command.downcase.strip}."
+	alarmcmd = @alarmCmd[command]
+	say "OK. I am changing alarm state to #{command}."
 	Rest.get(@isyIp + @areaCmd["first floor"] + alarmcmd + @elkCode, @isyAuth)
-	push_image("Arming Station", @webIp + "/#{command.downcase.strip}.png")
+	push_image("Arming Station", @webIp + "/#{command}.png")
   end
   
   def command_garage(command)
+	Rest.get(@isyIp + @nodeId["garage"] + @nodeCmd["on"], @isyAuth)
 	push_image("Garage Camera", @camUrl["garage"])
 	voltage = status_zone("garage door")
-	if (voltage < 7.0 && command.downcase.strip == "open")
+	if (voltage < 7.0 && command == "open")
 		say "OK. I am opening your garage door."
 		Rest.get(@isyIp + @outputCmd["garage door"], @isyAuth)
-	elsif (voltage > 7.0 && command.downcase.strip == "close")
+	elsif (voltage > 7.0 && command == "close")
 		response = ask "I would not want to cause injury or damage. Is the garage door clear?"
 		if (response =~ /yes|yep|yeah|ok/i)
 			say "Thank you. I am closing your garage door."
@@ -77,8 +74,9 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
 			say "OK. I will not close your garage door."
 		end
 	else
-		say "Your garage door is already #{command.downcase.strip}, Cabrone."
+		say "Your garage door is already #{command}, Cabrone."
   	end
+	Rest.get(@isyIp + @nodeId["garage"] + @nodeCmd["off"], @isyAuth)
   end
   
   def push_image(title, image)
