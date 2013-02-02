@@ -13,6 +13,15 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
   attr_accessor :webip
   
   def initialize(config = {})  
+	@isyIp		= config["isyip"]
+	@isyAuth	= {:basic_auth => {:username => config["isyid"], :password => config["isypw"]}}
+	@elkCode	= config["elkcode"]
+	@camUrl 	= Hash.new
+	@camUrl 	= config["camurls"]
+	@camAuth 	= nil
+	@camAuth 	= {:http_basic_authentication => [config["camid"], config["campw"]]} if config["camid"] 
+	@webIp 		= config["webip"] 
+
 	configIsy(config)
   end
 

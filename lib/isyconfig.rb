@@ -1,14 +1,5 @@
 def configIsy(config)
 
-@isyIp		= config["isyip"]
-@isyAuth	= {:basic_auth => {:username => config["isyid"], :password => config["isypw"]}}
-@elkCode	= config["elkcode"]
-@camUrl 	= Hash.new
-@camUrl 	= config["camurls"]
-@camAuth 	= nil
-@camAuth 	= {:http_basic_authentication => [config["camid"], config["campw"]]} if config["camid"] 
-@webIp 		= config["webip"] 
-
 # Node IDs
 # Note: Must all be lower case. Use multiple entries for variability in Siri response.
 @nodeId = Hash.new
