@@ -133,5 +133,5 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
 	return status.downcase.strip
   end
 
-  
+    
 end

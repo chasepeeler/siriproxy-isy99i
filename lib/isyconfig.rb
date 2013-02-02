@@ -43,7 +43,7 @@ def configIsy(config)
 @inputSt["deck box open"] 		= "/rest/status/14%2048%20F9%201"
 @inputSt["doorbell"] 			= "/rest/status/1C%207%2049%201" 
 @inputSt["porch motion"] 		= "/rest/status/1C%205%20FF%201" 
-@inputSt["stairwell motion"] 	= "/rest/status/14%207E%2049%201"
+@inputSt["stairwell motion"] 	= "/rest/status/14%207E%2049%201"  
 
 # Future use
 @programId = Hash.new
