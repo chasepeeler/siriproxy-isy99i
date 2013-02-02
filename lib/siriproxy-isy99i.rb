@@ -57,7 +57,7 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
 		
   def command_alarm(command)
 	alarmcmd = @alarmCmd[command.downcase.strip]
-	say "OK. I am changing alarm state to #{command}."
+	say "OK. I am changing alarm state to #{command.downcase.strip}."
 	Rest.get(@isyIp + @areaCmd["first floor"] + alarmcmd + @elkCode, @isyAuth)
 	push_image("Arming Station", @webIp + "/#{command.downcase.strip}.png")
   end
