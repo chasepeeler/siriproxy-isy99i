@@ -31,12 +31,12 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
   end
 
   listen_for (/turn (on|off) (.*)/i) do |command, name|
-	command_turn(command.downcase.strip, name.downcase.strip)
+	command_node(command.downcase.strip, name.downcase.strip)
 	request_completed
   end
   
   listen_for (/ring doorbell/i) do
-	command_turn("on", "doorbell")
+	command_node("on", "doorbell")
 	request_completed
   end
   
@@ -55,7 +55,7 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
 	request_completed
   end
 
-  def command_turn(command, name)
+  def command_node(command, name)
 	nodeid = @nodeId[name]
 	unless nodeid.nil?
 		say "OK. I am turning #{command} #{name} now."
@@ -106,20 +106,12 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
   
   def status_input(input)
   	# Battery operated devices do not continuously reports status, thus will be blank until first change after an ISY reboot or power cycle.
-  	resp = Rest.get(@isyIp + input, @isyAuth).inspect
-    resp = resp.gsub(/^.*tted"=>"/, "")
-    status = resp.gsub(/", "uom.*$/, "")
+	resp = Rest.get(@isyIp + input, @isyAuth).inspect
+	resp = resp.gsub(/^.*tted"=>"/, "")
+	status = resp.gsub(/", "uom.*$/, "")
 	return status.downcase.strip
   end
   			
-  def push_image(title, image)
-	object = SiriAddViews.new
-	object.make_root(last_ref_id)
-	answer = SiriAnswer.new(title, [SiriAnswerLine.new('logo', image)])
-	object.views << SiriAnswerSnippet.new([answer])
-	send_object object
-  end		
-
   def status_zone(zone)
   	resp = Rest.get(@isyIp + @zoneSt[zone], @isyAuth).inspect
   	resp = resp.gsub(/^.*val\D+/, "")
@@ -133,5 +125,13 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
 	return status.downcase.strip
   end
 
-    
+  def push_image(title, image)
+	object = SiriAddViews.new
+	object.make_root(last_ref_id)
+	answer = SiriAnswer.new(title, [SiriAnswerLine.new('logo', image)])
+	object.views << SiriAnswerSnippet.new([answer])
+	send_object object
+  end		
+
+  
 end
