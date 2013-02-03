@@ -105,7 +105,7 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
   end
   
   def status_input(input)
-  	# Battery operated devices do not continuously reports status, thus will be blank until first change after an ISY reboot or power cycle.
+  	# Battery operated devices do not continuously report status, thus will be blank until first change after an ISY reboot or power cycle.
 	resp = Hash[Rest.get(@isyIp + input, @isyAuth).parsed_response]
 	status = resp["properties"]["property"]["formatted"]
 	return status.downcase.strip
