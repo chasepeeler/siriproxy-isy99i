@@ -30,7 +30,7 @@ Universal Devices ISY-99i
 
 The Universal Devices ISY-99i series of home automation controllers have a REST API which can use used for monitoring and control of your home automation system, including the Elk M1 Gold security panel if you purchase the Universal Devices add-on module for two way communication.  
 
-The (ISY Developers Manual and Elk Integration Manual](http://www.universal-devices.com/developers/wsdk/) documents the REST API for the ISY-99i series of controllers.
+The [ISY Developers Manual and Elk Integration Manual](http://www.universal-devices.com/developers/wsdk/) documents the REST API for the ISY-99i series of controllers.
 
 There also is a very active user and developer [support forum](http://forum.universal-devices.com) for both new and active users.  
 
@@ -85,7 +85,7 @@ Installation
 
 - Run  
 
-`rvmsudo siriproxy server`
+`siriproxy server`
 
 
 
