@@ -6,9 +6,13 @@ About
 
 Siriproxy-isy99i is a [SiriProxy] (https://github.com/plamoni/SiriProxy) plugin that allows you to control home automation devices using the [Universal Devices ISY-99i Series] (http://sales.universal-devices.com) controller through Apple's Siri interface on any iOS device that supports Siri.   It does not require a jailbreak, nor do I endorse doing so.   
 
-Utilizing the REST interface of the ISY-99i, this plugin matches certain voice commands and sends the appropriate command via http to the controller.  See below for specific usage.
+First, you must have SiriProxy installed and working.  [HOW-TOs for Siriprixy] (https://github.com/plamoni/SiriProxy/wiki/Installation-How-Tos) 
 
-My fork of [Hoopty3’s plugin] (https://github.com/hoopty3/siriproxy-isy99i) is just that.  If you already have an ISY-99i and made it here, then you are already a tweaker and know it is impossible to provide a single solution that will suit everyone’s needs and configuration.  I do not intend to merge any changes unless those are improvements in reliability or control. The baseline changes I made from Hoopty3’s plugin include:
+Second, you must have an ISY-99i series home automation controller installed and configured to control you Insteon/X10/Zwave/Zigbee devices.  Optionally, you can control the [Elk Products](http://www.elkproducts.com) M1 Gold security panel and IP based security cameras.    
+
+Third, in order push custom images and to support images from IP cameras requiring authentication, you need to have access to or set up a web server on your SiriProxy server to cache the camera image to push to Siri.  Simply type `apt-get install apache2 -y`.   The default configuration for APACHE will work.   SiriProxy will need write permission to the `/var/www/` folder, which if you are running SiriProxy as ROOT will be able to write the camera image. 
+
+This fork of [Hoopty3’s plugin] (https://github.com/hoopty3/siriproxy-isy99i) is just that.  If you already have an ISY-99i and made it here, then you are already a tweaker and know it is impossible to provide a single solution that will suit everyone’s needs and configuration.  I do not intend to merge any changes unless those are improvements in reliability or control. The baseline changes I made from Hoopty3’s plugin include:
 - Added Elk M1 Gold control for arming, disarming, and relay output control.
 - Added ability to push IP camera and custom images to Siri.     
 - Removed the Insteon thermostat control since I have a [Nest] (http://www.nest.com) thermostat which can also be controlled by SiriProxy thanks to [Chilitechno.] (https://github.com/chilitechno/SiriProxy-NestLearningThermostat)
@@ -20,35 +24,70 @@ I have received offers to make a donation to help offset the cost of hardware an
 
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=HQMKLUZY23SEE)
 
+
+Universal Devices ISY-99i
+--------------------------
+
+The Universal Devices ISY-99i series of home automation controllers have a REST API which can use used for monitoring and control of your home automation system, including the Elk M1 Gold security panel if you purchase the Universal Devices add-on module for two way communication.  
+
+The (ISY Developers Manual and Elk Integration Manual](http://www.universal-devices.com/developers/wsdk/) documents the REST API for the ISY-99i series of controllers.
+
+There also is a very active user and developer [support forum](http://forum.universal-devices.com) for both new and active users.  
+
+
 Installation
 ------------
 
-First and foremost, [SiriProxy] (https://github.com/plamoni/SiriProxy) must be installed and working.  Do not attempt to do anything with this plugin until you have installed SiriProxy and have verified that it is working correctly. If this is your first SiriProxy venture, I highly recommend you do all your initial setup and tweaking on a [Virtual Machine] (http://www.virtualbox.org) running [Ubuntu Linux.] (http://www.ubuntu.com) In my case, I have SiriProxy installed a Marvell SheevaPlug computer which I can leave on 24/7.   For more information on SiriProxy on other platforms, I started a [SiriProxy Wiki] (https://github.com/plamoni/SiriProxy/wiki/Installation-How-Tos) page to capture everyone’s efforts.  
+- Navigate to the SiriProxy plugins directory  
 
-Once SiriProxy is up and running, you'll want to add the siriproxy-isy99i plugin.  This will have to be done manually, as it is necessary to add your specific devices and their addresses to a configuration file (devices.rb).  This process is a bit more complicated that some other plugins, but I will walk you through the steps I used.  
+`cd ~/SiriProxy/plugins/`
 
-It may also be helpful to look at this [video by jbaybayjbaybay] (http://www.youtube.com/watch?v=A48SGUt_7lw) as it's the one I used to figure this process out.  The video includes info on creating a new plugin and editing the files, which can be helpful when it comes to experimenting with your own plugins, but it won't be necessary in order to just install this plugin.  So, I'll skip those particular instructions below.
+- Get the latest repo   
 
-1.  Download the repository as a [zip file] (https://github.com/elvisimprsntr/siriproxy-isy99i/zipball/master).
-2.  Extract the full directory (i.e. elvisimprsntr-siriproxy-isy99i-######), depending on your distribution, to:    
- - `~/.rvm/gems/ruby-1.9.3-p###@SiriProxy/gems/siriproxy-0.3.#/plugins`    
- - `/usr/local/rvm/gems/ruby-1.9.3-p###@SiriProxy/gems/siriproxy-0.3.#/plugins`   
-and rename it siriproxy-isy99i or create a symbolic link. You will need to go to View and select 'Show Hidden Files' in order to see .rvm directory.
-3.  Navigate to the `siriproxy-isy99i/lib` directory and open devices.rb for editing.  Gedit or vim works just fine.
-4.  Here you will need to enter your specific device info, such as what you will call them and their addresses.  This file is populated with examples and should be pretty self explanatory.  
-5.  If a device is dimmable, set the @dimmable variable to 1, otherwise it is not necessary or should be set to some number other than 1.  You can control devices or scenes, but you cannot currently get the status of a scene (scenes don't have a status).
-6.  Copy the siriproxy-99i directory to `~/SiriProxy/plugins` directory
-7.  Open up siriproxy-isy99i/config-info.yml and copy all the settings listed there.
-8.  Navigate to `~/.siriproxy` and open config.yml for editing.
-9.  Paste the settings copied from config-info.yml into config.yml making sure to keep format and line spacing same as the examples.  
-10. Set the host, username, and password fields for your system's configuration.  Don't forget to save the file when you're done.
-11. Open a terminal and navigate to ~/SiriProxy
-12. Type `siriproxy bundle` <enter>
-13. Type `bundle install` <enter>
-14. Type `siriproxy server` <enter> followed by your password.
-15. SiriProxy with ISY99i control is now ready for use.
+`wget "https://github.com/elvisimprsntr/siriproxy-isy99i/zipball/master"`
 
-**NOTE: If/when you make changes to either devices.rb or siriproxy-isy99i.rb, you must copy it to the other plugin directory.  Remember, you put a copy in** `~/.rvm/gems/ruby-1.9.3-p###@SiriProxy/gems/siriproxy-0.3.#/plugins` **AND** `~/SiriProxy/plugins`**.  They both have to match!  Then follow steps 11 - 15 of the installation procedure to load up your changes and start the server again.**
+- Unzip the repo  
+
+`unzip master`
+
+- Create a symbolic link. **Note: Replace #'s as appropriate.**  
+
+`ln -sf elvisimprsntr-siriproxy-isy99i-####### siriproxy-isy99i`
+
+- Add the example configuration to the master config.yml  
+
+`cat siriproxy-isy99i/config-info.yml >> ~/.siriproxy/config.yml`
+
+- Edit the config.yml as required.     **Note: Make sure to line up the column spacing.**
+
+`vim ~/.siriproxy/config.yml`
+
+- Edit the isy99iconfig.rb as you wish.  **Note: Repeat all the following steps if you make additional changes.**    
+
+`vim siriproxy-isy99i\lib\isy99iconfig.rb`
+
+- Copy the repo and the symbolic link to the appropriate install directory.  **Note: Replace #'s as appropriate.  Replace /usr/local/rvm/ with ~/.rvm/ depending on your Linux distribution**     
+
+`cp -rv elvisimprsntr-siriproxy-isy99i-####### /usr/local/rvm/gems/ruby-1.9.3-p###@SiriProxy/gems/siriproxy-0.3.#/plugins/`    
+`cp -rv siriproxy-isy99i /usr/local/rvm/gems/ruby-1.9.3-p###@SiriProxy/gems/siriproxy-0.3.#/plugins/`    
+
+- Navigate the SiriProxy directory  
+
+`cd ~/SiriProxy`
+
+- Bundle  
+
+`siriproxy bundle`
+
+- Install  
+
+`bundle install`
+
+- Run  
+
+`rvmsudo siriproxy server`
+
+
 
 Usage
 -----
