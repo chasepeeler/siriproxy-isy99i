@@ -12,12 +12,6 @@ Second, you must have an ISY-99i series home automation controller installed and
 
 Third, in order push custom images and to support images from IP cameras requiring authentication, you need to have access to or set up a web server on your SiriProxy server to cache the camera image to push to Siri.  Simply type `apt-get install apache2 -y`.   The default configuration for APACHE will work.   SiriProxy will need write permission to the `/var/www/` folder, which if you are running SiriProxy as ROOT will be able to write the camera image. 
 
-This fork of [Hoopty3’s plugin] (https://github.com/hoopty3/siriproxy-isy99i) is just that.  If you already have an ISY-99i and made it here, then you are already a tweaker and know it is impossible to provide a single solution that will suit everyone’s needs and configuration.  I do not intend to merge any changes unless those are improvements in reliability or control. The baseline changes I made from Hoopty3’s plugin include:
-- Added Elk M1 Gold control for arming, disarming, and relay output control.
-- Added ability to push IP camera and custom images to Siri.     
-- Removed the Insteon thermostat control since I have a [Nest] (http://www.nest.com) thermostat which can also be controlled by SiriProxy thanks to [Chilitechno.] (https://github.com/chilitechno/SiriProxy-NestLearningThermostat)
-- Removed dimmer control and device status since I mostly have CFL’s in my home and already have visual feedback.  Seemed like a lot of extra code to maintain for little value added, not to mention I think there were some problems correctly parsing device status.    
-
 See the following video for a short demonstration: http://www.youtube.com/watch?v=PXmCiaRc9XU  
 
 I have received offers to make a donation to help offset the cost of hardware and for my time.  If you feel so inclined you can donate thru PayPal.  
