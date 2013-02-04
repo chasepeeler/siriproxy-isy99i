@@ -34,7 +34,7 @@ The [ISY Developers Manual and Elk Integration Manual](http://www.universal-devi
 
 Here are some simple [BASH scripts] (https://gist.github.com/4052516) which you can modify to experiment using the REST API of the ISY-99i.    
 
-There also is a very active user and developer [support forum](http://forum.universal-devices.com) for both new and active users.  
+There also is a very active user and developer [support forum](http://forum.universal-devices.com) for both users and developers.
 
 
 Installation
