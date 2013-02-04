@@ -69,7 +69,7 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
   	inputst = @inputSt[input]
   	unless inputst.nil?
   		status = status_input(inputst)
-  		say "#{input} is #{status}" 
+  		say "#{input} is #{status}." 
   	else
   		say "I'm sorry, but I am not programmed to check #{input} status." 
   	end
@@ -108,17 +108,14 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
   	# Battery operated devices do not continuously report status, thus will be blank until first change after an ISY reboot or power cycle.
 	resp = Hash[Rest.get(@isyIp + input, @isyAuth).parsed_response]
 	status = resp["properties"]["property"]["formatted"]
+	(status == " ") ? (status = "unknown") : ( )
 	return status.downcase.strip
   end
   			
   def status_zone(zone)
   	resp = Hash[Rest.get(@isyIp + @zoneSt[zone], @isyAuth).parsed_response]
   	voltage = resp["ze"]["val"].to_f / 10
-	if (voltage > 10) 
-		status = "open"
-	else
-		status = "closed"	
-	end
+	(voltage > 10) ? (status = "open") : (status = "closed")
 	return status.downcase.strip
   end
 
