@@ -6,7 +6,7 @@ About
 
 Siriproxy-isy99i is a [SiriProxy] (https://github.com/plamoni/SiriProxy) plugin that allows you to control home automation devices using the [Universal Devices ISY-99i Series] (http://sales.universal-devices.com) controller through Apple's Siri interface on any iOS device that supports Siri. It does not require a jailbreak, nor do I endorse doing so.   
 
-My fork of [Hoopty3’s plugin] (https://github.com/hoopty3/siriproxy-isy99i) is just that. The long term goal is to make the plugin self aware of the ISY and configuration, thus I do not intend to merge changes not consistent with that goal,  The baseline changes I made from Hoopty3’s plugin include:
+My fork of [Hoopty3’s plugin] (https://github.com/hoopty3/siriproxy-isy99i) is just that. The long term goal is to make the plugin self aware of the ISY and configuration, thus I do not intend to merge changes not consistent with that goal,  Aside from completely rewriting the plugin from scratch, the baseline functional changes I made from Hoopty3’s plugin include:
 - Added Elk M1 Gold control for arming, disarming, and relay output control.
 - Added ability to push IP camera and custom images to Siri.     
 - Removed the Insteon thermostat control since I have a [Nest] (http://www.nest.com) thermostat which can also be controlled by SiriProxy thanks to [Chilitechno.] (https://github.com/chilitechno/SiriProxy-NestLearningThermostat)
