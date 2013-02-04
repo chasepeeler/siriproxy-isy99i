@@ -10,7 +10,7 @@ My fork of [Hoopty3’s plugin] (https://github.com/hoopty3/siriproxy-isy99i) is
 - Added Elk M1 Gold control for arming, disarming, and relay output control.
 - Added ability to push IP camera and custom images to Siri.     
 - Removed the Insteon thermostat control since I have a [Nest] (http://www.nest.com) thermostat which can also be controlled by SiriProxy thanks to [Chilitechno's plugin.] (https://github.com/chilitechno/SiriProxy-NestLearningThermostat)
-- Removed dimmer control since I mostly have CFL’s in my home and already have visual feedback.  Seemed like a lot of extra code to maintain for little value added, not to mention I think there were some problems correctly parsing device status.    
+- Removed dimmer control since I have mostly CFL’s in my home and already have visual feedback.  Seemed like a lot of extra code to maintain for little value added, not to mention I think there were some problems correctly parsing device status.    
 
 First, you must have SiriProxy installed and working.  [HOW-TOs for Siriprixy] (https://github.com/plamoni/SiriProxy/wiki/Installation-How-Tos) 
 
@@ -28,7 +28,7 @@ I have received offers to make a donation to help offset the cost of hardware an
 Universal Devices ISY-99i
 --------------------------
 
-The Universal Devices ISY-99i series of home automation controllers have a REST API which can use used for monitoring and control of your home automation system, including the Elk M1 Gold security panel if you purchase the Universal Devices add-on module for two way communication.  
+The Universal Devices ISY-99i series of home automation controllers have a REST API which can be used for monitoring and control of your home automation system, including the Elk M1 Gold security panel if you purchase the Universal Devices add-on module for two way communication.  
 
 The [ISY Developers Manual and Elk Integration Manual](http://www.universal-devices.com/developers/wsdk/) documents the REST API for the ISY-99i series of controllers.
 
