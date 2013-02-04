@@ -9,12 +9,12 @@ Siriproxy-isy99i is a [SiriProxy] (https://github.com/plamoni/SiriProxy) plugin 
 My fork of [Hoopty3’s plugin] (https://github.com/hoopty3/siriproxy-isy99i) is just that. The long term goal is to make the plugin self aware of the ISY and configuration, thus I do not intend to merge changes not consistent with that goal.  Aside from completely rewriting the plugin from scratch, the baseline functional changes I made from Hoopty3’s plugin include:
 - Added Elk M1 Gold control for arming, disarming, and relay output control.
 - Added ability to push IP camera and custom images to Siri.     
-- Removed the Insteon thermostat control since I have a [Nest] (http://www.nest.com) thermostat which can also be controlled by SiriProxy thanks to [Chilitechno.] (https://github.com/chilitechno/SiriProxy-NestLearningThermostat)
+- Removed the Insteon thermostat control since I have a [Nest] (http://www.nest.com) thermostat which can also be controlled by SiriProxy thanks to [Chilitechno's plugin.] (https://github.com/chilitechno/SiriProxy-NestLearningThermostat)
 - Removed dimmer control since I mostly have CFL’s in my home and already have visual feedback.  Seemed like a lot of extra code to maintain for little value added, not to mention I think there were some problems correctly parsing device status.    
 
 First, you must have SiriProxy installed and working.  [HOW-TOs for Siriprixy] (https://github.com/plamoni/SiriProxy/wiki/Installation-How-Tos) 
 
-Second, you must have an ISY-99i series home automation controller installed and configured to control you Insteon/X10/Zwave/Zigbee devices.  Optionally, you can control the [Elk Products](http://www.elkproducts.com) M1 Gold security panel and IP based security cameras.    
+Second, you must have an ISY-99i series home automation controller installed and configured to control your Insteon/X10/Zwave/Zigbee devices.  Optionally, you can control the [Elk Products](http://www.elkproducts.com) M1 Gold security panel and IP based security cameras.    
 
 Third, in order push custom images and to support images from IP cameras requiring authentication, you need to have access to or set up a web server on your SiriProxy server to cache the camera image to push to Siri.  Simply type `apt-get install apache2 -y`.   The default configuration for APACHE will work.   SiriProxy will need write permission to the `/var/www/` folder, which if you are running SiriProxy as ROOT will be able to write the camera image. 
 
