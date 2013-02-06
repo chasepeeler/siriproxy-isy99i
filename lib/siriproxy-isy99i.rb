@@ -54,11 +54,18 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
 	command_garage command.downcase.strip
 	request_completed
   end
-
+  
+  listen_for (/way|coming home/i) do
+  	command_node("on","home")
+  	command_alarm("disarm")
+  	command_garage("open")
+	request_completed
+  end
+    	
   def command_node(command, name)
 	nodeid = @nodeId[name]
 	unless nodeid.nil?
-		say "OK. I am turning #{command} #{name} now."
+		say "Turning #{command} #{name} now."
 		Rest.get(@isyIp + nodeid + @nodeCmd[command], @isyAuth) 
 	else
 		say "I'm sorry, but I am not programmed to control #{name}."
@@ -78,7 +85,7 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
 
   def command_alarm(command)
 	alarmcmd = @alarmCmd[command]
-	say "OK. I am changing alarm state to #{command}."
+	say "Changing alarm state to #{command}."
 	Rest.get(@isyIp + @areaCmd["first floor"] + alarmcmd + @elkCode, @isyAuth)
 	push_image("Arming Station", @webIp + "/#{command}.png")
   end
@@ -88,7 +95,7 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
 	push_image("Garage Camera", @camUrl["garage"])
 	status = status_zone("garage door")
 	if (status == "closed" && command == "open")
-		say "OK. I am opening your garage door."
+		say "Opening your garage door."
 		Rest.get(@isyIp + @outputCmd["garage door"], @isyAuth)
 	elsif (status == "open" && command == "close")
 		response = ask "I would not want to cause injury or damage. Is the garage door clear?"
@@ -126,6 +133,7 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
 	object.views << SiriAnswerSnippet.new([answer])
 	send_object object
   end		
-
   
 end
+
+
