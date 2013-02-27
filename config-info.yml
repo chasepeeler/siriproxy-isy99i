@@ -1,9 +1,3 @@
-#Example configuration options that can be placed in your main SiriProxy config.yml
-
-##########################
-#NOTICE: Modifying these options in this file has no effect. You must put them in SiriProxy's config.yml!
-##########################
-
     - name: 'Isy99i'
       path: './plugins/siriproxy-isy99i'
       isyip: 'http://192.168.69.90' #IP address of the ISY-99i
@@ -13,6 +7,4 @@
       camurls:	{ 'garage': 'http://192.168.69.81/cgi/jpg/image.cgi' } #URLs of IP camera image.    
       camid: 'username'
       campw: 'password'
-      webip: 'http://192.168.69.95' #IP address of your web server (hosting custom pictures)
-
 

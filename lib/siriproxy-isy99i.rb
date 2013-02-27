@@ -1,3 +1,4 @@
+require 'socket'
 require 'httparty'
 require 'siri_objects'
 require 'isyconfig'
@@ -10,7 +11,6 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
   attr_accessor :camurls
   attr_accessor :camid
   attr_accessor :campw
-  attr_accessor :webip
   
   def initialize(config = {})  
 	@isyIp		= config["isyip"]
@@ -20,7 +20,7 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
 	@camUrl 	= config["camurls"]
 	@camAuth 	= nil
 	@camAuth 	= {:http_basic_authentication => [config["camid"], config["campw"]]} if config["camid"] 
-	@webIp 		= config["webip"] 
+    @webIp = "http://" + UDPSocket.open {|s| s.connect("255.255.255.0", 1); s.addr.last}
 
 	configIsy(config)
   end
@@ -29,6 +29,8 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
     include HTTParty
     format :xml
   end
+  
+########### Commands  
 
   listen_for (/turn (on|off) (.*)/i) do |command, name|
 	command_node(command.downcase.strip, name.downcase.strip)
@@ -62,6 +64,8 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
 	request_completed
   end
     	
+########### Actions      	
+    	
   def command_node(command, name)
 	nodeid = @nodeId[name]
 	unless nodeid.nil?
@@ -81,7 +85,6 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
   		say "I'm sorry, but I am not programmed to check #{input} status." 
   	end
   end	
-
 
   def command_alarm(command)
 	alarmcmd = @alarmCmd[command]
