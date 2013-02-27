@@ -20,7 +20,7 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
 	@camUrl 	= config["camurls"]
 	@camAuth 	= nil
 	@camAuth 	= {:http_basic_authentication => [config["camid"], config["campw"]]} if config["camid"] 
-    @webIp = "http://" + UDPSocket.open {|s| s.connect("255.255.255.0", 1); s.addr.last}
+	@webIp = "http://" + UDPSocket.open {|s| s.connect("255.255.255.0", 1); s.addr.last}
 
 	configIsy(config)
   end
