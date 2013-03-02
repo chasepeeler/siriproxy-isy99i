@@ -113,10 +113,7 @@ Usage
 To Do List
 ----------
 
-Let me know if you want to collaborate.  
-
-- Add ability to launch a live IP camera feed or at least provide a button to do so.
-- Make plugin self aware of your configuration using the REST interface.
+If you want to collaborate, review the issues list for things to implement. Fork, modify, test, and submit a pull request.
 
 Licensing
 ---------
