@@ -32,7 +32,7 @@ The Universal Devices ISY-99i series of home automation controllers have a REST 
 
 The [ISY Developers Manual and Elk Integration Manual](http://www.universal-devices.com/developers/wsdk/) documents the REST API for the ISY-99i series of controllers.
 
-Here are some simple [BASH scripts] (https://gist.github.com/4052516) you use to experiment with ISY=99i REST API.    
+Here are some simple [BASH scripts] (https://gist.github.com/4052516) you use to experiment with ISY-99i REST API.    
 
 There also is a very active user and developer [support forum.](http://forum.universal-devices.com)
 
