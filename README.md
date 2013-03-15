@@ -12,7 +12,7 @@ My fork of [Hoopty3’s plugin] (https://github.com/hoopty3/siriproxy-isy99i) is
 - Removed the Insteon thermostat control since I have a [Nest] (http://www.nest.com) thermostat which can also be controlled by SiriProxy thanks to [Chilitechno's plugin.] (https://github.com/chilitechno/SiriProxy-NestLearningThermostat)
 - Removed dimmer control since I have mostly CFL’s in my home and already have visual feedback.  Seemed like a lot of extra code to maintain for little value added, not to mention I think there were some problems correctly parsing device status.    
 
-First, you must have SiriProxy installed and working.  [HOW-TOs for Siriprixy] (https://github.com/plamoni/SiriProxy/wiki/Installation-How-Tos) 
+First, you must have SiriProxy installed and working.  [HOW-TOs for SiriProxy] (https://github.com/plamoni/SiriProxy/wiki/Installation-How-Tos) 
 
 Second, you must have an ISY-99i series home automation controller installed and configured to control your Insteon/X10/Zwave/Zigbee devices.  Optionally, you can control the [Elk Products](http://www.elkproducts.com) M1 Gold security panel and IP based security cameras.    
 
