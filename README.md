@@ -37,24 +37,19 @@ Here are some simple [BASH scripts] (https://gist.github.com/4052516) you use to
 There also is a very active user and developer [support forum.](http://forum.universal-devices.com)
 
 
-Installation
-------------
+Installation (New for SiriProxy 0.5.0+)
+---------------------------------------
 
-- Navigate to the SiriProxy plugins directory  
 
-`cd ~/SiriProxy/plugins/`
+- Create a plugins directory  
+
+`mkdir ~/plugins`  
+
+`cd ~/plugins/` 
 
 - Get the latest repo   
 
-`wget "https://github.com/elvisimprsntr/siriproxy-isy99i/zipball/master"`
-
-- Unzip the repo  
-
-`unzip master`
-
-- Create a symbolic link. **Note: Replace #'s as appropriate.**  
-
-`ln -sf elvisimprsntr-siriproxy-isy99i-####### siriproxy-isy99i`
+`git clone git://github.com/elvisimprsntr/siriproxy-isy99i`
 
 - Add the example configuration to the master config.yml  
 
@@ -68,27 +63,17 @@ Installation
 
 `vim siriproxy-isy99i/lib/isyconfig.rb`
 
-- Copy the repo and the symbolic link to the appropriate install directory.  **Note: Replace #'s as appropriate.  Replace /usr/local/rvm/ with ~/.rvm/ depending on your Linux distribution**     
+- Edit the plugin as you wish.  **Note: Repeat all the following steps if you make additional changes.**    
 
-`cp -rv elvisimprsntr-siriproxy-isy99i-####### /usr/local/rvm/gems/ruby-1.9.3-p###@SiriProxy/gems/siriproxy-0.3.#/plugins/`    
-`cp -rv siriproxy-isy99i /usr/local/rvm/gems/ruby-1.9.3-p###@SiriProxy/gems/siriproxy-0.3.#/plugins/`    
-
-- Navigate the SiriProxy directory  
-
-`cd ~/SiriProxy`
+`vim siriproxy-isy99i\lib\siriproxy-isy99i.rb`
 
 - Bundle  
 
 `siriproxy bundle`
 
-- Install  
+- Run (Ref: https://github.com/plamoni/SiriProxy#set-up-instructions)  
 
-`bundle install`
-
-- Run  
-
-`siriproxy server`
-
+`[rvmsudo] siriproxy server [-d ###.###.###.###] [-u username]`
 
 
 Usage
