@@ -1,5 +1,6 @@
 require 'socket'
 require 'httparty'
+require 'simple_upnp'
 require 'siri_objects'
 require 'isyconfig'
 
