@@ -3,35 +3,35 @@ def configIsy(config)
 # Node IDs
 # Note: Must all be lower case. Use multiple entries for variability in Siri response.
 # Note: Eliminate leading zeros in device address.  
-@nodeId = Hash.new
-@nodeId["all lights"] 		= "/rest/nodes/8730"
-@nodeId["attic"] 			= "/rest/nodes/18595"
-@nodeId["away"] 			= "/rest/nodes/4597"
-@nodeId["exterior"] 		= "/rest/nodes/32377"
-@nodeId["porch"] 			= "/rest/nodes/32377"
-@nodeId["driveway"] 		= "/rest/nodes/32377"
-@nodeId["balcony"] 			= "/rest/nodes/32377"
-@nodeId["garage"] 			= "/rest/nodes/27356"
-@nodeId["home"] 			= "/rest/nodes/39198"
-@nodeId["kitchen"] 			= "/rest/nodes/20304"
-@nodeId["landing"] 			= "/rest/nodes/6489"
-@nodeId["living"] 			= "/rest/nodes/19496"
-@nodeId["master"] 			= "/rest/nodes/25061"
-@nodeId["movie"] 			= "/rest/nodes/26974"
-@nodeId["party"] 			= "/rest/nodes/25568"
-@nodeId["stairwell"] 		= "/rest/nodes/32068"
-@nodeId["theater"] 			= "/rest/nodes/44403"
-@nodeId["theater ceiling"] 	= "/rest/nodes/59332"
-@nodeId["theater drapes"] 	= "/rest/nodes/37131"
-@nodeId["theater lamp"] 	= "/rest/nodes/61694"
-@nodeId["theater valance"] 	= "/rest/nodes/8000"
-@nodeId["doorbell"] 		= "/rest/nodes/1C%207%2049%202"
+#@nodeId = Hash.new
+#@nodeId["all lights"] 		= "/rest/nodes/8730"
+#@nodeId["attic"] 			= "/rest/nodes/18595"
+#@nodeId["away"] 			= "/rest/nodes/4597"
+#@nodeId["exterior"] 		= "/rest/nodes/32377"
+#@nodeId["porch"] 			= "/rest/nodes/32377"
+#@nodeId["driveway"] 		= "/rest/nodes/32377"
+#@nodeId["balcony"] 			= "/rest/nodes/32377"
+#@nodeId["garage"] 			= "/rest/nodes/27356"
+#@nodeId["home"] 			= "/rest/nodes/39198"
+#@nodeId["kitchen"] 			= "/rest/nodes/20304"
+#@nodeId["landing"] 			= "/rest/nodes/6489"
+#@nodeId["living"] 			= "/rest/nodes/19496"
+#@nodeId["master"] 			= "/rest/nodes/25061"
+#@nodeId["movie"] 			= "/rest/nodes/26974"
+#@nodeId["party"] 			= "/rest/nodes/25568"
+#@nodeId["stairwell"] 		= "/rest/nodes/32068"
+#@nodeId["theater"] 			= "/rest/nodes/44403"
+#@nodeId["theater ceiling"] 	= "/rest/nodes/59332"
+#@nodeId["theater drapes"] 	= "/rest/nodes/37131"
+#@nodeId["theater lamp"] 	= "/rest/nodes/61694"
+#@nodeId["theater valance"] 	= "/rest/nodes/8000"
+#@nodeId["doorbell"] 		= "/rest/nodes/1C%207%2049%202"
 
 # Node commands
 # Note: Must all be lower case. Use multiple entries for variability in Siri response.
-@nodeCmd = Hash.new
-@nodeCmd["on"] 	= "/cmd/DON"
-@nodeCmd["off"] = "/cmd/DOF"
+#@nodeCmd = Hash.new
+#@nodeCmd["on"] 	= "/cmd/DON"
+#@nodeCmd["off"] = "/cmd/DOF"
 
 # ISY inputs
 # Note: Must all be lower case. Use multiple entries for variability in Siri response.

@@ -13,8 +13,15 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
   attr_accessor :camid
   attr_accessor :campw
   
+  class Rest
+    include HTTParty
+    format :xml
+  end
+  
+################### Initialization
+
   def initialize(config = {})  
-	@isyIp		= config["isyip"]
+	@isyIp		= "http://" + config["isyip"]
 	@isyAuth	= {:basic_auth => {:username => config["isyid"], :password => config["isypw"]}}
 	@elkCode	= config["elkcode"]
 	@camUrl 	= Hash.new
@@ -24,13 +31,29 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
 	@webIp = "http://" + UDPSocket.open {|s| s.connect("255.255.255.0", 1); s.addr.last}
 
 	configIsy(config)
+
+	@nodeId = Hash.new
+	nodes = Rest.get(@isyIp + "/rest/nodes/scenes", @isyAuth).parsed_response["nodes"]
+	nodes["group"].each do |group|
+		if (!group["name"].match(/^~/))
+			@nodeId[group["name"].downcase.strip] = "/rest/nodes/" + group["address"].strip 
+		end
+	end
+	puts @nodeId
+	
+	@nodeCmd = Hash.new
+	controls = Rest.get(@isyIp + "/rest/config", @isyAuth).parsed_response["configuration"]["controls"]
+	controls["control"].each do |control|
+		unless control.has_key?("readOnly")
+			@nodeCmd[control["label"].downcase.strip] = "/cmd/" + control["name"].strip 
+		end
+	end
+	puts @nodeCmd
+	
+	
+	
   end
 
-  class Rest
-    include HTTParty
-    format :xml
-  end
-  
 ########### Commands  
 
   listen_for (/turn (on|off) (.*)/i) do |command, name|
