@@ -19,7 +19,6 @@ Gem::Specification.new do |s|
 
   # specify any dependencies here; for example:
   s.add_runtime_dependency "httparty"
-  s.add_runtime_dependency "simple_upnp"
   s.add_runtime_dependency "siriproxy", ">=0.5.2"
 
 
