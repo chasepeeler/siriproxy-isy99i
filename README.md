@@ -20,7 +20,7 @@ Third, in order push custom images and to support images from IP cameras requiri
 
 See the following video for a short demonstration: http://www.youtube.com/watch?v=PXmCiaRc9XU  
 
-[![Video](http://img.youtube.com/vi/PXmCiaRc9XU/0.jpg)](http://www.youtube.com/watch?v=PXmCiaRc9XU)
+[![Video](http://img.youtube.com/vi/PXmCiaRc9XU/2.jpg)](http://www.youtube.com/watch?v=PXmCiaRc9XU)
 
 I have received offers to make a donation to help offset the cost of hardware and for my time.  If you feel so inclined you can donate thru PayPal.  
 
