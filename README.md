@@ -18,7 +18,7 @@ Second, you must have an ISY-99i series home automation controller installed and
 
 Third, in order push custom images and to support images from IP cameras requiring authentication, you need to have access to or set up a web server on your SiriProxy server to cache the camera image to push to Siri.  Simply type `apt-get install apache2 -y`.   The default configuration for APACHE will work.   SiriProxy will need write permission to the `/var/www/` folder, which if you are running SiriProxy as ROOT will be able to write the camera image. 
 
-See the following video for a short demonstration: http://www.youtube.com/watch?v=PXmCiaRc9XU  
+[Watch Demo Video](http://www.youtube.com/watch?v=PXmCiaRc9XU)  
 
 [![Video](http://img.youtube.com/vi/PXmCiaRc9XU/0.jpg)](http://www.youtube.com/watch?v=PXmCiaRc9XU)
 
