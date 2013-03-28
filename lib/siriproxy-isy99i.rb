@@ -27,29 +27,27 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
 	@camUrl 	= config["camurls"]
 	@camAuth 	= nil
 	@camAuth 	= {:http_basic_authentication => [config["camid"], config["campw"]]} if config["camid"] 
-	@webIp = "http://" + UDPSocket.open {|s| s.connect("255.255.255.0", 1); s.addr.last}
+	@webIp 		= "http://" + UDPSocket.open {|s| s.connect("255.255.255.0", 1); s.addr.last}
 
 	configIsy(config)
-
-	@nodeId = Hash.new
+	
+	@@nodeId = Hash.new
 	nodes = Rest.get(@isyIp + "/rest/nodes/scenes", @isyAuth).parsed_response["nodes"]
 	nodes["group"].each do |group|
 		if (!group["name"].match(/^~/))
-			@nodeId[group["name"].downcase.strip] = "/rest/nodes/" + group["address"].strip 
+			@@nodeId[group["name"].downcase.strip] = "/rest/nodes/" + group["address"].strip 
 		end
 	end
-	puts @nodeId
+	puts @@nodeId
 	
-	@nodeCmd = Hash.new
+	@@nodeCmd = Hash.new
 	controls = Rest.get(@isyIp + "/rest/config", @isyAuth).parsed_response["configuration"]["controls"]
 	controls["control"].each do |control|
 		unless control.has_key?("readOnly")
-			@nodeCmd[control["label"].downcase.strip] = "/cmd/" + control["name"].strip 
+			@@nodeCmd[control["label"].downcase.strip] = "/cmd/" + control["name"].strip 
 		end
 	end
-	puts @nodeCmd
-	
-	
+	puts @@nodeCmd
 	
   end
 
@@ -62,6 +60,8 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
   
   listen_for (/ring doorbell/i) do
 	command_node("on", "doorbell")
+	sleep(1)
+	command_node("off", "doorbell")
 	request_completed
   end
   
@@ -90,10 +90,10 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
 ########### Actions      	
     	
   def command_node(command, name)
-	nodeid = @nodeId[name]
+	nodeid = @@nodeId[name]
 	unless nodeid.nil?
 		say "Turning #{command} #{name} now."
-		Rest.get(@isyIp + nodeid + @nodeCmd[command], @isyAuth) 
+		Rest.get(@isyIp + nodeid + @@nodeCmd[command], @isyAuth) 
 	else
 		say "I'm sorry, but I am not programmed to control #{name}."
 	end
@@ -117,7 +117,7 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
   end
   
   def command_garage(command)
-	Rest.get(@isyIp + @nodeId["garage"] + @nodeCmd["on"], @isyAuth)
+	Rest.get(@isyIp + @@nodeId["garage"] + @@nodeCmd["on"], @isyAuth)
 	push_image("Garage Camera", @camUrl["garage"])
 	status = status_zone("garage door")
 	if (status == "closed" && command == "open")
@@ -134,7 +134,7 @@ class SiriProxy::Plugin::Isy99i < SiriProxy::Plugin
 	else
 		say "Your garage door is already #{status}, Cabrone."
   	end
-	Rest.get(@isyIp + @nodeId["garage"] + @nodeCmd["off"], @isyAuth)
+	Rest.get(@isyIp + @@nodeId["garage"] + @@nodeCmd["off"], @isyAuth)
   end
   
   def status_input(input)
